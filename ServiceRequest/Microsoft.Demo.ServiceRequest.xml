@@ -1,0 +1,207 @@
+﻿<!--
+ Copyright(c) Microsoft.  All rights reserved.
+ This code is licensed under the Microsoft Public License.
+ http://www.microsoft.com/opensource/licenses.mspx
+ 
+ THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND,
+ EITHER EXPRESSED OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES
+ OF FITNESS FOR A PARITCULAR PURPOSE, MERCHANTABILITY, OR
+ NON-INFRINGEMENT.
+ 
+ Original Author: Travis Wright (twright@microsoft.com)
+ Original Creation Date: Dec 30, 2009
+ Original Version: 1.0
+-->
+<ManagementPack ContentReadable="true" SchemaVersion="1.1" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>Microsoft.Demo.ServiceRequest</ID>
+      <Version>1.0.0.0</Version>
+    </Identity>
+    <Name>Microsoft Demo - Service Request</Name>
+    <References>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.0.5244.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="WorkItem">
+        <ID>System.WorkItem.Library</ID>
+        <Version>7.0.5244.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="EnterpriseManagement">
+        <ID>Microsoft.EnterpriseManagement.ServiceManager.UI.Console</ID>
+        <Version>7.0.5244.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="ServiceManager.WorkItem.Library">
+        <ID>ServiceManager.WorkItem.Library</ID>
+        <Version>7.0.5244.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Authoring">
+        <ID>Microsoft.EnterpriseManagement.ServiceManager.UI.Authoring</ID>
+        <Version>7.0.5244.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="Microsoft.Demo.WorkItem.ServiceRequest" Accessibility="Public" Abstract="false" Base="WorkItem!System.WorkItem" Hosted="false" Singleton="false" Extension="false">
+          <Property ID="Classification" Type="enum" Key="false" Required="false" EnumType="ServiceRequestClassificationEnum" />
+        </ClassType>
+      </ClassTypes>
+      <EnumerationTypes>
+        <EnumerationValue ID="ServiceRequestClassificationEnum" Accessibility="Public" />
+        <EnumerationValue ID="ServiceRequestClassificationEnum.AddUserToGroup" Accessibility="Public" Parent="ServiceRequestClassificationEnum" Ordinal="0" />
+        <EnumerationValue ID="ServiceRequestClassificationEnum.CreateUser" Accessibility="Public" Parent="ServiceRequestClassificationEnum" Ordinal="5" />
+        <EnumerationValue ID="ServiceRequestClassificationEnum.DisableUser" Accessibility="Public" Parent="ServiceRequestClassificationEnum" Ordinal="10" />
+      </EnumerationTypes>
+      <TypeProjections>
+        <TypeProjection ID="TypeProjection.ServiceRequest" Accessibility="Public" Type="Microsoft.Demo.WorkItem.ServiceRequest">
+          <Component Path="$Target/Path[Relationship='WorkItem!System.WorkItemAssignedToUser']$" Alias="AssignedTo" />
+          <Component Path="$Target/Path[Relationship='WorkItem!System.WorkItemAffectedUser']$" Alias="AffectedUser" />
+          <Component Path="$Target/Path[Relationship='WorkItem!System.WorkItemCreatedByUser']$" Alias="CreatedBy" />
+          <Component Path="$Target/Path[Relationship='WorkItem!System.WorkItemRelatesToConfigItem']$" Alias="RelatesToCI" />
+        </TypeProjection>
+      </TypeProjections>
+    </EntityTypes>
+  </TypeDefinitions>
+  <Categories>
+    <Category ID="Category.ServiceRequestFolderGetsConsoleFolderTasks" Target="Folder.ServiceRequests" Value="EnterpriseManagement!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.FolderTasks" />
+    <Category ID="Category.ServiceRequestFolderGetsConsoleViewTasks" Target="View.AllServiceRequests" Value="EnterpriseManagement!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.ViewTasks" />
+    <Category ID="Category.ServiceRequestCreateType" Target="View.AllServiceRequests" Value="Authoring!Microsoft.EnterpriseManagement.ServiceManager.UI.Authoring.CreateTypeCategory" />
+  </Categories>
+  <Presentation>
+    <Forms>
+      <Form ID="Form.ServiceRequest" Accessibility="Public" Target="TypeProjection.ServiceRequest" Assembly="Assembly.ServiceRequest" TypeName="Microsoft.Demo.ServiceRequest.ServiceRequest">
+        <Category>Form</Category>
+        <FormStrings>
+          <FormString ID="Label_AssignedTo">$MPElement[Name="Microsoft.Demo.ServiceRequest.Form.Label_AssignedTo"]$</FormString>
+          <FormString ID="Label_AffectedUser">$MPElement[Name="Microsoft.Demo.ServiceRequest.Form.Label_AffectedUser"]$</FormString>
+          <FormString ID="Label_AffectedCIs">$MPElement[Name="Microsoft.Demo.ServiceRequest.Form.Label_AffectedCIs"]$</FormString>
+          <FormString ID="Label_DisplayName">$MPElement[Name="Microsoft.Demo.ServiceRequest.Form.Label_DisplayName"]$</FormString>
+          <FormString ID="Label_Add">$MPElement[Name="Microsoft.Demo.ServiceRequest.Form.Label_Add"]$</FormString>
+          <FormString ID="Label_Remove">$MPElement[Name="Microsoft.Demo.ServiceRequest.Form.Label_Remove"]$</FormString>
+        </FormStrings>
+      </Form>
+    </Forms>
+    <Views>
+      <View ID="View.AllServiceRequests" Accessibility="Public" Enabled="true" Target="Microsoft.Demo.WorkItem.ServiceRequest" TypeID="EnterpriseManagement!GridViewType" Visible="true">
+        <Category>NotUsed</Category>
+        <Data>
+          <Adapters>
+            <Adapter AdapterName="dataportal:EnterpriseManagementObjectAdapter">
+              <AdapterAssembly>Microsoft.EnterpriseManagement.UI.SdkDataAccess</AdapterAssembly>
+              <AdapterType>Microsoft.EnterpriseManagement.UI.SdkDataAccess.DataAdapters.EnterpriseManagementObjectAdapter</AdapterType>
+            </Adapter>
+            <Adapter AdapterName="viewframework://Adapters/AdvancedList">
+              <AdapterAssembly>Microsoft.EnterpriseManagement.UI.ViewFramework</AdapterAssembly>
+              <AdapterType>Microsoft.EnterpriseManagement.UI.ViewFramework.AdvancedListSupportAdapter</AdapterType>
+            </Adapter>
+          </Adapters>
+          <ItemsSource>
+            <AdvancedListSupportClass DataTypeName="" AdapterName="viewframework://Adapters/AdvancedList" FullUpdateAdapter="dataportal:EnterpriseManagementObjectAdapter" DataSource="mom:ManagementGroup" FullUpdateFrequency="1" Streaming="true" IsRecurring="true" RecurrenceFrequency="{x:Static s:Int32.MaxValue}" xmlns="clr-namespace:Microsoft.EnterpriseManagement.UI.ViewFramework;assembly=Microsoft.EnterpriseManagement.UI.ViewFramework" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib">
+              <AdvancedListSupportClass.Parameters>
+                <QueryParameter Parameter="TargetClass" Value="Microsoft.Demo.WorkItem.ServiceRequest" />
+              </AdvancedListSupportClass.Parameters>
+            </AdvancedListSupportClass>
+          </ItemsSource>
+          <Criteria />
+        </Data>
+        <Presentation>
+          <Columns>
+            <mux:ColumnCollection xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mux="http://schemas.microsoft.com/SystemCenter/Common/UI/Views/GridView" xmlns:s="clr-namespace:System;assembly=mscorlib">              
+              <mux:Column Name="Id" DisplayMemberBinding="{Binding Path=Id}" Width="100" DisplayName="ID" Property="Id" DataType="s:String" />
+              <mux:Column Name="Title" DisplayMemberBinding="{Binding Path=Title}" Width="100" DisplayName="Title" Property="Title" DataType="s:String" />
+              <mux:Column Name="CreatedDate" DisplayMemberBinding="{Binding Path=CreatedDate}" Width="100" DisplayName="Created Date" Property="CreatedDate" DataType="s:DateTime" />
+              <mux:Column Name="ScheduledEndDate" DisplayMemberBinding="{Binding Path=ScheduledEndDate}" Width="100" DisplayName="Scheduled End Date" Property="ScheduledEndDate" DataType="s:DateTime" />
+              <mux:Column Name="ScheduledStartDate" DisplayMemberBinding="{Binding Path=ScheduledStartDate}" Width="100" DisplayName="Scheduled Start Date" Property="ScheduledStartDate" DataType="s:DateTime" />
+            </mux:ColumnCollection>
+          </Columns>
+          <ViewStrings />
+        </Presentation>
+      </View>
+    </Views>
+    <Folders>
+      <Folder ID="Folder.ServiceRequests" Accessibility="Public" ParentFolder="ServiceManager.WorkItem.Library!ServiceManager.Console.WorkItem.Root" />
+    </Folders>
+
+    <FolderItems>
+      <FolderItem ElementID="EnterpriseManagement!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Task.CreateGridView" ID="FolderItem.CreateGridViewTask" Folder="Folder.ServiceRequests" />
+      <FolderItem ElementID="View.AllServiceRequests" ID="FolderItem.AllServiceRequests" Folder="Folder.ServiceRequests" />
+    </FolderItems>
+
+    <ImageReferences>
+      <ImageReference ElementID="Folder.ServiceRequests" ImageID="EnterpriseManagement!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Image.Folder" />
+      <ImageReference ElementID="View.AllServiceRequests" ImageID="EnterpriseManagement!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Image.CreateView" />
+    </ImageReferences>
+
+    <StringResources>
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_AssignedTo"/>
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_AffectedUser"/>
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_AffectedCIs"/>
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_DisplayName"/>
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_Add"/>
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_Remove"/>
+    </StringResources>
+
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest">
+          <Name>Service Request</Name>
+        </DisplayString>
+        <DisplayString ElementID="TypeProjection.ServiceRequest">
+          <Name>Service Request</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.WorkItem.ServiceRequest">
+          <Name>Service Request</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.WorkItem.ServiceRequest" SubElementID="Classification">
+          <Name>Service Request Classification</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_AssignedTo">
+          <Name>Assigned to</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_AffectedUser">
+          <Name>Affected user</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_AffectedCIs">
+          <Name>Affected Configuration Items</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_DisplayName">
+          <Name>Display Name</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_Add">
+          <Name>Add</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_Remove">
+          <Name>Remove</Name>
+        </DisplayString>
+        <DisplayString ElementID="ServiceRequestClassificationEnum.AddUserToGroup">
+          <Name>Add User to Group</Name>
+        </DisplayString>
+        <DisplayString ElementID="ServiceRequestClassificationEnum.CreateUser">
+          <Name>Create User</Name>
+        </DisplayString>
+        <DisplayString ElementID="ServiceRequestClassificationEnum.DisableUser">
+          <Name>Disable User</Name>
+        </DisplayString>
+        <DisplayString ElementID="Folder.ServiceRequests">
+          <Name>Service Requests</Name>
+        </DisplayString>
+        <DisplayString ElementID="View.AllServiceRequests">
+          <Name>All Service Requests</Name>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+  <Resources>
+    <Assembly ID="Assembly.ServiceRequest" Accessibility="Public" FileName="Microsoft.Demo.ServiceRequest.dll" HasNullStream="false" QualifiedName="Microsoft.Demo.ServiceRequest, Version=1.0.0.0" />
+  </Resources>
+</ManagementPack>

@@ -1,0 +1,203 @@
+﻿<!--
+Microsoft.Demo.SeviceRequest.xaml
+ 
+Description:
+Microosoft.Demo.SeviceRequest.xaml contains the form XAML for the Service Request form.
+ 
+Copyright(c) Microsoft.  All rights reserved.
+This code is licensed under the Microsoft Public License.
+http://www.microsoft.com/opensource/licenses.mspx
+ 
+THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND,
+EITHER EXPRESSED OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES
+OF FITNESS FOR A PARITCULAR PURPOSE, MERCHANTABILITY, OR
+NON-INFRINGEMENT.
+ 
+Original Author: Travis Wright (twright@microsoft.com)
+Original Creation Date: Jan 7, 2010
+Original Version: 1.0    
+-->
+<UserControl x:Class="Microsoft.Demo.ServiceRequest.ServiceRequest"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:wpfToolKit="clr-namespace:Microsoft.Windows.Controls;assembly=wpfToolKit"
+    xmlns:smcontrols="clr-namespace:Microsoft.EnterpriseManagement.UI.WpfControls;assembly=Microsoft.EnterpriseManagement.UI.SmControls"
+    xmlns:local="clr-namespace:Microsoft.Demo.ServiceRequest"   
+    xmlns:scwpf="http://schemas.microsoft.com/SystemCenter/Common/UI/Wpf"
+    xmlns:views="clr-namespace:Microsoft.EnterpriseManagement.UI.FormsInfra;assembly=Microsoft.EnterpriseManagement.UI.FormsInfra"    
+    Height="600" Width="600"
+    Background="White"
+    Loaded="UserControl_Loaded"
+    >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Label      Grid.Row="0" Grid.Column="0" Margin="8,8,85,0" Height="28" VerticalAlignment="Top" Name="lblTitle" Grid.ColumnSpan="2" Target="{Binding ElementName=txtTitle}">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[Title].Value" FallbackValue="[Title]">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <TextBox    Grid.Row="0" Grid.Column="0" Margin="8,30,85,0" Height="28" VerticalAlignment="Top" Name="txtTitle" Grid.ColumnSpan="2" Text="{Binding Title}"/>
+        
+        <Label      Grid.Row="0" Grid.Column="0" Margin="0,8,8,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" Name="lblID" Grid.ColumnSpan="2" Width="72" Target="{Binding ElementName=txtID}">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[Id].Value" FallbackValue="[Id]">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <TextBox    Grid.Row="0" Grid.Column="0" Margin="0,30,8,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" Name="txtID" Grid.ColumnSpan="2" Width="70" Text="{Binding Id}" IsReadOnly="True" />
+        
+        <Label      Grid.Row="1" Grid.Column="0" Margin="8,8,0,0" Height="28" VerticalAlignment="Top" Name="lblDescription" Target="{Binding ElementName=txtDescription}">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[Description].Value" FallbackValue="[Description]:">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <TextBox    Grid.Row="1" Grid.Column="0" Margin="8,30,8,0" VerticalAlignment="Top" Name="txtDescription" Grid.ColumnSpan="2" TextWrapping="Wrap" MinLines="4" Text="{Binding Description}"/>
+        
+        <Label      Grid.Row="2" Grid.Column="0" Margin="8,8,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Name="lblAssgignedToUser" Target="{Binding ElementName=upAssignedTo}" >
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[Label_AssignedTo].Value" FallbackValue="[AssignedTo]:">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <smcontrols:UserPicker  Grid.Row="2" Grid.Column="0" Margin="8,30,8,0"  User="{Binding Path=AssignedTo, Mode=TwoWay}" VerticalAlignment="Top" Name="upAssignedTo"/>
+        
+        <Label      Grid.Row="2" Grid.Column="1" Margin="8,8,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Name="lblClassification" Target="{Binding ElementName=lpClassification}">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[Classification].Value" FallbackValue="[Classification]:">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <smcontrols:ListPicker Grid.Row="2" Grid.Column="1" Margin="8,30,8,0" Name="lpClassification" VerticalAlignment="Top" ParentCategoryId="{Binding Source={x:Static local:ServiceRequest.guidClassificationEnumRoot}, Mode=OneWay}" 
+                                           SelectedItem="{Binding Path=Classification, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+
+        <Label      Grid.Row="3" Grid.Column="0" Margin="8,8,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Name="lblAffectedUser" Target="{Binding ElementName=upAffectedUser}">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[Label_AffectedUser].Value" FallbackValue="[AffectedUser]:">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <smcontrols:UserPicker  Grid.Row="3" Grid.Column="0" Margin="8,30,8,0"  User="{Binding Path=AffectedUser, Mode=TwoWay}" VerticalAlignment="Top" Name="upAffectedUser"/>
+        
+        <Label      Grid.Row="3" Grid.Column="1" Margin="8,8,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Name="lblAlternateContactInfo">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[ContactMethod].Value" FallbackValue="[ContactMethod]:">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <TextBox    Grid.Row="3" Grid.Column="1" Margin="8,30,8,0" Height="28" VerticalAlignment="Top" Name="txtAlternateContactInfo" Text="{Binding ContactMethod}"/>
+        
+        <Label      Grid.Row="4" Grid.Column="0" Margin="8,8,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Name="lblScheduledStartDate">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[ScheduledStartDate].Value" FallbackValue="[ScheduledStartDate]:">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <wpfToolKit:DatePicker Grid.Row="4" Grid.Column="0"  Margin="8,30,0,0" Height="28" VerticalAlignment="Top" Name="dtScheduledStartDate" SelectedDateFormat="FullDateTime" SelectedDate="{Binding ScheduledStartDate, Mode=TwoWay}"/>
+        
+        <Label      Grid.Row="4" Grid.Column="1" Margin="8,8,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Name="lblScheduledEndDate">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[ScheduledEndDate].Value" FallbackValue="[ScheduledEndDate]:">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <wpfToolKit:DatePicker Grid.Row="4" Grid.Column="1"  Margin="8,30,0,0" Height="28" VerticalAlignment="Top" Name="dtScheduledEndDate" SelectedDateFormat="FullDateTime" SelectedDate="{Binding ScheduledEndDate, Mode=TwoWay}"/>
+        
+        <Label      Grid.Row="5" Grid.Column="0" Margin="8,8,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Name="lblActualStartDate">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[ActualStartDate].Value" FallbackValue="[ActualStartDate]:">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <wpfToolKit:DatePicker Grid.Row="5" Grid.Column="0"  Margin="8,30,0,0" Height="28" VerticalAlignment="Top" Name="dtActualStartDate" SelectedDateFormat="FullDateTime" SelectedDate="{Binding ActualStartDate, Mode=TwoWay}"/>
+        
+        <Label      Grid.Row="5" Grid.Column="1" Margin="8,8,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Name="lblActualEndDate">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[ActualEndDate].Value" FallbackValue="[ActualEndDate]:">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Label.Content>
+        </Label>
+        <wpfToolKit:DatePicker Grid.Row="5" Grid.Column="1"  Margin="8,30,0,0" Height="28" VerticalAlignment="Top" Name="dtActualEndDate" SelectedDateFormat="FullDateTime" SelectedDate="{Binding ActualEndDate, Mode=TwoWay}"/>
+        
+        <Label      Grid.Row="6" Grid.Column="0" Margin="8,8,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Name="lblAffectedCIs" Grid.ColumnSpan="2">
+            <Label.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[Label_AffectedCIs].Value" FallbackValue="[AffectedCIs]:">
+                        <Binding.Converter>
+                            <scwpf:FormatterConverter>{0}:</scwpf:FormatterConverter>
+                        </Binding.Converter>
+                </Binding>            
+            </Label.Content>
+        </Label>
+        <ListView   Grid.Row="6" Grid.Column="0" Margin="8,30,80,8" VerticalAlignment="Top" Name="lvAffectedCIs" Grid.ColumnSpan="2" MinHeight="45" ItemsSource="{Binding Path=RelatesToCI, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding DisplayName}" Width="Auto">
+                        <GridViewColumn.Header>
+                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[Label_DisplayName].Value" FallbackValue="[DisplayName]"/>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Grid.Row="6" Grid.Column="0" Margin="0,30,8,0" VerticalAlignment="Top" HorizontalAlignment="Right" Name="btnAdd" Grid.ColumnSpan="2" Height="20" Width="65" Click="btnAdd_Click">
+            <Button.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[Label_Add].Value" FallbackValue="[Add]">
+                    <Binding.Converter>
+                        <scwpf:FormatterConverter>{0}...</scwpf:FormatterConverter>
+                    </Binding.Converter>
+                </Binding>
+            </Button.Content>
+        </Button>
+        <Button Grid.Row="6" Grid.Column="0" Margin="0,55,8,0" VerticalAlignment="Top" HorizontalAlignment="Right" Name="btnRemove" Grid.ColumnSpan="2" Height="20" Width="65" Click="btnRemove_Click">
+            <Button.Content>
+                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type views:FormView}}" Path="Strings[Label_Remove].Value" FallbackValue="[Remove]"/>
+            </Button.Content>
+        </Button>
+    </Grid>
+</UserControl>
