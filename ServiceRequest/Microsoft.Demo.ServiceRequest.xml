@@ -200,6 +200,55 @@
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
+    <LanguagePack ID="RUS" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest">
+          <Name>Запрос на обслуживание</Name>
+        </DisplayString>
+        <DisplayString ElementID="TypeProjection.ServiceRequest">
+          <Name>Запрос на обслуживание</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.WorkItem.ServiceRequest">
+          <Name>Запрос на обслуживание</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.WorkItem.ServiceRequest" SubElementID="Classification">
+          <Name>Классификация запроса</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_AssignedTo">
+          <Name>Назначено на</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_AffectedUser">
+          <Name>Затронутый пользователь</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_AffectedCIs">
+          <Name>Затронутые конфигурационные единицы</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_DisplayName">
+          <Name>Отображаемое название</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_Add">
+          <Name>Добавить</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_Remove">
+          <Name>Удалить</Name>
+        </DisplayString>
+        <DisplayString ElementID="ServiceRequestClassificationEnum.AddUserToGroup">
+          <Name>Добавить пользователя в группу</Name>
+        </DisplayString>
+        <DisplayString ElementID="ServiceRequestClassificationEnum.CreateUser">
+          <Name>Создать польователя</Name>
+        </DisplayString>
+        <DisplayString ElementID="ServiceRequestClassificationEnum.DisableUser">
+          <Name>Отключить пользователя</Name>
+        </DisplayString>
+        <DisplayString ElementID="Folder.ServiceRequests">
+          <Name>Запросы на обслуживание</Name>
+        </DisplayString>
+        <DisplayString ElementID="View.AllServiceRequests">
+          <Name>Все запросы на обслуживание</Name>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
   </LanguagePacks>
   <Resources>
     <Assembly ID="Assembly.ServiceRequest" Accessibility="Public" FileName="Microsoft.Demo.ServiceRequest.dll" HasNullStream="false" QualifiedName="Microsoft.Demo.ServiceRequest, Version=1.0.0.0" />
