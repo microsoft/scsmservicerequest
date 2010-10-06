@@ -24,11 +24,51 @@ Original Version: 1.0
     xmlns:smcontrols="clr-namespace:Microsoft.EnterpriseManagement.UI.WpfControls;assembly=Microsoft.EnterpriseManagement.UI.SmControls"
     xmlns:local="clr-namespace:Microsoft.Demo.ServiceRequest"   
     xmlns:scwpf="http://schemas.microsoft.com/SystemCenter/Common/UI/Wpf"
-    xmlns:views="clr-namespace:Microsoft.EnterpriseManagement.UI.FormsInfra;assembly=Microsoft.EnterpriseManagement.UI.FormsInfra"    
+    xmlns:views="clr-namespace:Microsoft.EnterpriseManagement.UI.FormsInfra;assembly=Microsoft.EnterpriseManagement.UI.FormsInfra"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     Height="600" Width="600"
     Background="White"
     Loaded="UserControl_Loaded"
     >
+    <scwpf:BusinessLogic.Rules>
+        <scwpf:RuleCollection>
+            <!-- Set Window Title -->
+            <scwpf:Rule>
+                <scwpf:Rule.Triggers>
+                    <scwpf:PropertyChangedTrigger Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=DataContext}"/>
+                    <scwpf:RoutedEventTrigger RoutedEvent="FrameworkElement.Loaded"/>
+                    <scwpf:PropertyChangedTrigger Binding="{Binding Path=Title}"/>
+                    <scwpf:PropertyChangedTrigger Binding="{Binding Path=Id}"/>
+                </scwpf:Rule.Triggers>
+                <scwpf:Rule.Conditions>
+                    <scwpf:PropertyMatchCondition Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=DataContext}" Operation="NotEquals">
+                        <scwpf:PropertyMatchCondition.Value>
+                            <x:Null/>
+                        </scwpf:PropertyMatchCondition.Value>
+                    </scwpf:PropertyMatchCondition>
+                    <scwpf:PropertyMatchCondition Binding="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=IsLoaded}">
+                        <scwpf:PropertyMatchCondition.Value>
+                            <sys:Boolean>True</sys:Boolean>
+                        </scwpf:PropertyMatchCondition.Value>
+                    </scwpf:PropertyMatchCondition>
+                </scwpf:Rule.Conditions>
+                <scwpf:ModifyPropertyAction Binding="{Binding RelativeSource={x:Static RelativeSource.Self},
+                                                              Path=(views:FormView.WindowTitle),
+                                                              Mode=TwoWay}">
+                    <scwpf:ModifyPropertyAction.ValueBinding>
+                        <MultiBinding Mode="OneWay">
+                            <MultiBinding.Converter>
+                                <scwpf:FormatterConverter>{0}: {1}</scwpf:FormatterConverter>
+                            </MultiBinding.Converter>
+                            <Binding Path="Id" Mode="OneWay" FallbackValue="[New Service Request]"/>
+                            <Binding Path="Title" Mode="OneWay" FallbackValue=""/>
+                        </MultiBinding>
+                    </scwpf:ModifyPropertyAction.ValueBinding>
+                </scwpf:ModifyPropertyAction>
+            </scwpf:Rule>
+        </scwpf:RuleCollection>
+    </scwpf:BusinessLogic.Rules>
+        
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />

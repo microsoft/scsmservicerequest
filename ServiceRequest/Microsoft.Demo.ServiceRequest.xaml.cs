@@ -132,10 +132,11 @@ namespace Microsoft.Demo.ServiceRequest
             IDataItem itemServiceRequest = this.DataContext as IDataItem;
             itemServiceRequest["DisplayName"] = itemServiceRequest["Id"] + " - " + itemServiceRequest["Title"];
         }
-
+        
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.AddHandler(FormEvents.PreviewSubmitEvent, new EventHandler<PreviewFormCommandEventArgs>(this.OnPreviewSubmit));
         }
+       
     }
 }
