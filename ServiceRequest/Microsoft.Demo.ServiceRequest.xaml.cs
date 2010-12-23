@@ -57,7 +57,8 @@ namespace Microsoft.Demo.ServiceRequest
     /// </summary>
     public partial class ServiceRequest : UserControl
     {
-        public static Guid guidClassificationEnumRoot = new Guid("4A7368B0-10F9-E93E-F399-0E250E05F108");
+        public static Guid guidClassificationEnumRoot = new Guid("AB422C80-3349-3792-F808-5BFD454EBD2B"); //Sealed with testkeys.snk
+        //public static Guid guidClassificationEnumRoot = new Guid("4A7368B0-10F9-E93E-F399-0E250E05F108"); //Unsealed
 
         public ServiceRequest()
         {
@@ -136,7 +137,15 @@ namespace Microsoft.Demo.ServiceRequest
             * This interface may change in the future and no migration path is guaranteed by Microsoft.
             */
             IDataItem itemServiceRequest = this.DataContext as IDataItem;
-            itemServiceRequest["DisplayName"] = itemServiceRequest["Id"] + " - " + itemServiceRequest["Title"];
+            if (String.IsNullOrEmpty(this.txtTitle.Text.Trim()))
+            {
+                e.Cancel = true;
+                MessageBox.Show("Please provide a title"); 
+            }
+            else
+            {
+                itemServiceRequest["DisplayName"] = itemServiceRequest["Id"] + " - " + itemServiceRequest["Title"];
+            }
         }
         
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
