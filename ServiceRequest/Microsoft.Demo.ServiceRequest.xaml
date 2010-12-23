@@ -214,7 +214,7 @@ Original Version: 1.0
                 </Binding>            
             </Label.Content>
         </Label>
-        <ListView   Grid.Row="6" Grid.Column="0" Margin="8,30,80,8" VerticalAlignment="Top" Name="lvAffectedCIs" Grid.ColumnSpan="2" MinHeight="45" ItemsSource="{Binding Path=RelatesToCI, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+        <ListView   Grid.Row="6" Grid.Column="0" Margin="8,30,80,8" VerticalAlignment="Top" Name="lvAffectedCIs" Grid.ColumnSpan="2" MinHeight="45" ItemsSource="{Binding Path=RelatesToCI, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" MouseDoubleClick="lvAffectedCIs_MouseDoubleClick">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding DisplayName}" Width="Auto">

@@ -1,18 +1,4 @@
-﻿<!--
- Copyright(c) Microsoft.  All rights reserved.
- This code is licensed under the Microsoft Public License.
- http://www.microsoft.com/opensource/licenses.mspx
- 
- THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND,
- EITHER EXPRESSED OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES
- OF FITNESS FOR A PARITCULAR PURPOSE, MERCHANTABILITY, OR
- NON-INFRINGEMENT.
- 
- Original Author: Travis Wright (twright@microsoft.com)
- Original Creation Date: Dec 30, 2009
- Original Version: 1.0
--->
-<ManagementPack ContentReadable="true" SchemaVersion="1.1" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+﻿<ManagementPack ContentReadable="true" SchemaVersion="1.1" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
       <ID>Microsoft.Demo.ServiceRequest</ID>
@@ -22,27 +8,42 @@
     <References>
       <Reference Alias="System">
         <ID>System.Library</ID>
-        <Version>7.0.5244.0</Version>
+        <Version>7.0.6555.0</Version>
         <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
       </Reference>
-      <Reference Alias="WorkItem">
-        <ID>System.WorkItem.Library</ID>
-        <Version>7.0.5244.0</Version>
-        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-      </Reference>
-      <Reference Alias="EnterpriseManagement">
+      <Reference Alias="Console">
         <ID>Microsoft.EnterpriseManagement.ServiceManager.UI.Console</ID>
-        <Version>7.0.5244.0</Version>
-        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-      </Reference>
-      <Reference Alias="ServiceManager.WorkItem.Library">
-        <ID>ServiceManager.WorkItem.Library</ID>
-        <Version>7.0.5244.0</Version>
+        <Version>7.0.6555.0</Version>
         <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
       </Reference>
       <Reference Alias="Authoring">
         <ID>Microsoft.EnterpriseManagement.ServiceManager.UI.Authoring</ID>
-        <Version>7.0.5244.0</Version>
+        <Version>7.0.6555.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Admin">
+        <ID>Microsoft.EnterpriseManagement.ServiceManager.UI.Administration</ID>
+        <Version>7.0.6555.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="WorkItem">
+        <ID>System.WorkItem.Library</ID>
+        <Version>7.0.6555.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Forms">
+        <ID>Microsoft.EnterpriseManagement.ServiceManager.Authoring.Forms</ID>
+        <Version>7.0.6555.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="ServiceManager.WorkItem.Library">
+        <ID>ServiceManager.WorkItem.Library</ID>
+        <Version>7.0.6555.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Image">
+        <ID>System.Image.Library</ID>
+        <Version>6.1.7221.0</Version>
         <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
       </Reference>
     </References>
@@ -51,9 +52,19 @@
     <EntityTypes>
       <ClassTypes>
         <ClassType ID="Microsoft.Demo.WorkItem.ServiceRequest" Accessibility="Public" Abstract="false" Base="WorkItem!System.WorkItem" Hosted="false" Singleton="false" Extension="false">
-          <Property ID="Classification" Type="enum" Key="false" Required="false" EnumType="ServiceRequestClassificationEnum" />
+          <Property ID="Classification" Type="enum" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" EnumType="ServiceRequestClassificationEnum" />
+        </ClassType>
+        <ClassType ID="Microsoft.Demo.CostCenter" Accessibility="Public" Abstract="false" Base="System!System.Entity" Hosted="false" Singleton="false" Extension="false">
+          <Property ID="CostCenterID" Type="int" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" />
+          <Property ID="ChargebackRate" Type="decimal" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="30" MinLength="0" Required="true" />
         </ClassType>
       </ClassTypes>
+      <RelationshipTypes>
+        <RelationshipType ID="ServiceRequestHasCostCenter" Accessibility="Public" Abstract="false" Base="System!System.Reference">
+          <Source ID="Source_5898501e_67de_48a3_aab3_d53b825e497f" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.Demo.WorkItem.ServiceRequest" />
+          <Target ID="Target_518ab7a7_b64b_4a36_986e_b447a422acbb" MinCardinality="0" MaxCardinality="1" Type="Microsoft.Demo.CostCenter" />
+        </RelationshipType>
+      </RelationshipTypes>
       <EnumerationTypes>
         <EnumerationValue ID="ServiceRequestClassificationEnum" Accessibility="Public" />
         <EnumerationValue ID="ServiceRequestClassificationEnum.AddUserToGroup" Accessibility="Public" Parent="ServiceRequestClassificationEnum" Ordinal="0" />
@@ -66,14 +77,24 @@
           <Component Path="$Target/Path[Relationship='WorkItem!System.WorkItemAffectedUser']$" Alias="AffectedUser" />
           <Component Path="$Target/Path[Relationship='WorkItem!System.WorkItemCreatedByUser']$" Alias="CreatedBy" />
           <Component Path="$Target/Path[Relationship='WorkItem!System.WorkItemRelatesToConfigItem']$" Alias="RelatesToCI" />
+          <Component Path="$Target/Path[Relationship='ServiceRequestHasCostCenter']$" Alias="RelatesToCostCenter" />
         </TypeProjection>
       </TypeProjections>
     </EntityTypes>
   </TypeDefinitions>
   <Categories>
-    <Category ID="Category.ServiceRequestFolderGetsConsoleFolderTasks" Target="Folder.ServiceRequests" Value="EnterpriseManagement!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.FolderTasks" />
-    <Category ID="Category.ServiceRequestFolderGetsConsoleViewTasks" Target="View.AllServiceRequests" Value="EnterpriseManagement!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.ViewTasks" />
-    <Category ID="Category.ServiceRequestCreateType" Target="View.AllServiceRequests" Value="Authoring!Microsoft.EnterpriseManagement.ServiceManager.UI.Authoring.CreateTypeCategory" />
+    <Category ID="Category.SCSM.MP.ServiceRequest" Value="Console!Microsoft.EnterpriseManagement.ServiceManager.ManagementPack">
+      <ManagementPackName>Microsoft.Demo.ServiceRequest</ManagementPackName>
+      <ManagementPackVersion>1.0.0.0</ManagementPackVersion>
+      <ManagementPackPublicKeyToken>9396306c2be7fcc4</ManagementPackPublicKeyToken>
+    </Category>
+    <Category ID="Category.ServiceRequestFolderGetsConsoleFolderTasks" Target="ServiceRequestsFolder" Value="Console!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.FolderTasks" />
+    <Category ID="Category.ServiceRequestsViewGetsConsoleViewTasks" Target="AllServiceRequestsView" Value="Console!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.ViewTasks" />
+    <Category ID="Category.CostCentersViewGetsConsoleViewTasks" Target="CostCentersView" Value="Console!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.ViewTasks" />
+    <Category ID="Category.ServiceRequestCreateType" Target="AllServiceRequestsView" Value="Authoring!Microsoft.EnterpriseManagement.ServiceManager.UI.Authoring.CreateTypeCategory" />
+    <Category ID="Category.CostCenterCreateType" Target="CostCentersView" Value="Authoring!Microsoft.EnterpriseManagement.ServiceManager.UI.Authoring.CreateTypeCategory" />
+    <Category ID="Category.DoubleClickEditCostCenter" Target="EditCostCenterTask" Value="Console!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.DoubleClickTask" />
+    <Category ID="Category.MultiSelectTask.DeleteCostCenter" Target="DeleteCostCenterTask" Value="Console!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.MultiSelectTask" />
   </Categories>
   <Presentation>
     <Forms>
@@ -88,9 +109,286 @@
           <FormString ID="Label_Remove">$MPElement[Name="Microsoft.Demo.ServiceRequest.Form.Label_Remove"]$</FormString>
         </FormStrings>
       </Form>
+      <Form ID="CostCenterForm" Accessibility="Public" Target="Microsoft.Demo.CostCenter" Assembly="Forms!AuthoringFormsAssembly" TypeName="Microsoft.EnterpriseManagement.ServiceManager.Authoring.Forms.EmptyForm">
+        <Category>Form</Category>
+        <Customization>
+          <AddControl Parent="Grid_1" Assembly="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Type="System.Windows.Controls.Label" Left="104" Top="56.5" Right="416" Bottom="719" Row="0" Column="0" />
+          <PropertyChange Object="Label_1" Property="HorizontalAlignment">
+            <NewValue>Left</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_1" Property="Margin">
+            <NewValue>104,56.5,0,719</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_1" Property="VerticalAlignment">
+            <NewValue>Top</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_1" Property="Margin">
+            <NewValue>104,56.5,0,0</NewValue>
+          </PropertyChange>
+          <Move X="70" Y="15">
+            <Element Name="Label_1" />
+          </Move>
+          <PropertyChange Object="Label_1" Property="Margin">
+            <NewValue>34,41.5,486,734</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_1" Property="Margin">
+            <NewValue>34,41.5,0,734</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_1" Property="Margin">
+            <NewValue>34,41.5,0,0</NewValue>
+          </PropertyChange>
+          <AddControl Parent="Grid_1" Assembly="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Type="System.Windows.Controls.Label" Left="48" Top="124.5" Right="472" Bottom="651" Row="0" Column="0" />
+          <PropertyChange Object="Label_2" Property="HorizontalAlignment">
+            <NewValue>Left</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_2" Property="Margin">
+            <NewValue>48,124.5,0,651</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_2" Property="VerticalAlignment">
+            <NewValue>Top</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_2" Property="Margin">
+            <NewValue>48,124.5,0,0</NewValue>
+          </PropertyChange>
+          <Move X="14" Y="18">
+            <Element Name="Label_2" />
+          </Move>
+          <PropertyChange Object="Label_2" Property="Margin">
+            <NewValue>34,106.5,486,669</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_2" Property="Margin">
+            <NewValue>34,106.5,0,669</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_2" Property="Margin">
+            <NewValue>34,106.5,0,0</NewValue>
+          </PropertyChange>
+          <AddControl Parent="Grid_1" Assembly="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Type="System.Windows.Controls.TextBox" Left="58" Top="70.5" Right="462" Bottom="705" Row="0" Column="0" />
+          <PropertyChange Object="TextBox_1" Property="HorizontalAlignment">
+            <NewValue>Left</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_1" Property="Margin">
+            <NewValue>58,70.5,0,705</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_1" Property="VerticalAlignment">
+            <NewValue>Top</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_1" Property="Margin">
+            <NewValue>58,70.5,0,0</NewValue>
+          </PropertyChange>
+          <Move X="24" Y="4.51999999999998">
+            <Element Name="TextBox_1" />
+          </Move>
+          <PropertyChange Object="TextBox_1" Property="Margin">
+            <NewValue>34,65.98,486,709</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_1" Property="Margin">
+            <NewValue>34,65.98,0,709</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_1" Property="Margin">
+            <NewValue>34,65.98,0,0</NewValue>
+          </PropertyChange>
+          <Resize Type="BottomRight" X="-236" Y="0">
+            <Element Name="TextBox_1" />
+          </Resize>
+          <PropertyChange Object="TextBox_1" Property="Margin">
+            <NewValue>34,65.98,250,709</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_1" Property="HorizontalAlignment">
+            <NewValue>Stretch</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_1" Property="Width">
+            <NewValue>Auto</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_1" Property="Margin">
+            <NewValue>34,65.98,250,0</NewValue>
+          </PropertyChange>
+          <AddControl Parent="Grid_1" Assembly="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Type="System.Windows.Controls.TextBox" Left="86" Top="171.5" Right="434" Bottom="604" Row="0" Column="0" />
+          <PropertyChange Object="TextBox_2" Property="HorizontalAlignment">
+            <NewValue>Left</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_2" Property="Margin">
+            <NewValue>86,171.5,0,604</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_2" Property="VerticalAlignment">
+            <NewValue>Top</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_2" Property="Margin">
+            <NewValue>86,171.5,0,0</NewValue>
+          </PropertyChange>
+          <Move X="52" Y="40.52">
+            <Element Name="TextBox_2" />
+          </Move>
+          <PropertyChange Object="TextBox_2" Property="Margin">
+            <NewValue>34,130.98,486,644</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_2" Property="Margin">
+            <NewValue>34,130.98,0,644</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_2" Property="Margin">
+            <NewValue>34,130.98,0,0</NewValue>
+          </PropertyChange>
+          <Resize Type="BottomRight" X="-47" Y="0">
+            <Element Name="TextBox_2" />
+          </Resize>
+          <PropertyChange Object="TextBox_2" Property="Margin">
+            <NewValue>34,130.98,439,644</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_2" Property="Margin">
+            <NewValue>34,130.98,0,644</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_2" Property="Margin">
+            <NewValue>34,130.98,0,0</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_2" Property="Text">
+            <NewValue />
+          </PropertyChange>
+          <PropertyBindingChange Object="TextBox_2" Property="Text">
+            <NewBinding Enabled="True" Path="ChargebackRate" Mode="Default" BindsDirectlyToSource="False" UpdateSourceTrigger="Default" />
+          </PropertyBindingChange>
+          <PropertyBindingChange Object="Label_2" Property="Content">
+            <NewBinding Enabled="False" />
+          </PropertyBindingChange>
+          <PropertyChange Object="Label_2" Property="Content">
+            <NewValue>Chargeback rate:</NewValue>
+          </PropertyChange>
+          <Resize Type="BottomRight" X="-47" Y="0">
+            <Element Name="Label_2" />
+          </Resize>
+          <PropertyChange Object="Label_2" Property="Margin">
+            <NewValue>34,106.5,439,669</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_2" Property="Margin">
+            <NewValue>34,106.5,0,669</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_2" Property="Margin">
+            <NewValue>34,106.5,0,0</NewValue>
+          </PropertyChange>
+          <PropertyBindingChange Object="Label_1" Property="Content">
+            <NewBinding Enabled="False" />
+          </PropertyBindingChange>
+          <PropertyChange Object="Label_1" Property="Content">
+            <NewValue>Display name:</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_1" Property="Text">
+            <NewValue />
+          </PropertyChange>
+          <PropertyBindingChange Object="TextBox_1" Property="Text">
+            <NewBinding Enabled="True" Path="DisplayName" Mode="Default" BindsDirectlyToSource="False" UpdateSourceTrigger="Default" />
+          </PropertyBindingChange>
+          <AddControl Parent="Grid_1" Assembly="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Type="System.Windows.Controls.Label" Left="202" Top="113.5" Right="318" Bottom="662" Row="0" Column="0" />
+          <PropertyChange Object="Label_3" Property="HorizontalAlignment">
+            <NewValue>Left</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_3" Property="Margin">
+            <NewValue>202,113.5,0,662</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_3" Property="VerticalAlignment">
+            <NewValue>Top</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_3" Property="Margin">
+            <NewValue>202,113.5,0,0</NewValue>
+          </PropertyChange>
+          <Move X="13" Y="7.48000000000002">
+            <Element Name="Label_3" />
+          </Move>
+          <PropertyChange Object="Label_3" Property="Margin">
+            <NewValue>189,106.02,331,669</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_3" Property="Margin">
+            <NewValue>189,106.02,0,669</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_3" Property="Margin">
+            <NewValue>189,106.02,0,0</NewValue>
+          </PropertyChange>
+          <PropertyBindingChange Object="Label_3" Property="Content">
+            <NewBinding Enabled="False" />
+          </PropertyBindingChange>
+          <PropertyChange Object="Label_3" Property="Content">
+            <NewValue>Cost center ID:</NewValue>
+          </PropertyChange>
+          <Resize Type="BottomRight" X="-24" Y="0">
+            <Element Name="Label_3" />
+          </Resize>
+          <PropertyChange Object="Label_3" Property="Margin">
+            <NewValue>189,106.02,307,669</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_3" Property="Margin">
+            <NewValue>189,106.02,0,669</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="Label_3" Property="Margin">
+            <NewValue>189,106.02,0,0</NewValue>
+          </PropertyChange>
+          <AddControl Parent="Grid_1" Assembly="PresentationFramework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" Type="System.Windows.Controls.TextBox" Left="201" Top="146.5" Right="319" Bottom="629" Row="0" Column="0" />
+          <PropertyChange Object="TextBox_3" Property="HorizontalAlignment">
+            <NewValue>Left</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_3" Property="Margin">
+            <NewValue>201,146.5,0,629</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_3" Property="VerticalAlignment">
+            <NewValue>Top</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_3" Property="Margin">
+            <NewValue>201,146.5,0,0</NewValue>
+          </PropertyChange>
+          <Move X="4" Y="16">
+            <Element Name="TextBox_3" />
+          </Move>
+          <PropertyChange Object="TextBox_3" Property="Margin">
+            <NewValue>197,130.5,323,645</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_3" Property="Margin">
+            <NewValue>197,130.5,0,645</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_3" Property="Margin">
+            <NewValue>197,130.5,0,0</NewValue>
+          </PropertyChange>
+          <Resize Type="BottomRight" X="-73" Y="0">
+            <Element Name="TextBox_3" />
+          </Resize>
+          <PropertyChange Object="TextBox_3" Property="Margin">
+            <NewValue>197,130.5,250,645</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_3" Property="HorizontalAlignment">
+            <NewValue>Stretch</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_3" Property="Width">
+            <NewValue>Auto</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_3" Property="Margin">
+            <NewValue>197,130.5,250,0</NewValue>
+          </PropertyChange>
+          <PropertyChange Object="TextBox_3" Property="Text">
+            <NewValue />
+          </PropertyChange>
+          <PropertyBindingChange Object="TextBox_3" Property="Text">
+            <NewBinding Enabled="True" Path="CostCenterID" Mode="Default" BindsDirectlyToSource="False" UpdateSourceTrigger="Default" />
+          </PropertyBindingChange>
+        </Customization>
+      </Form>
     </Forms>
+    <ConsoleTasks>
+      <ConsoleTask ID="EditCostCenterTask" Accessibility="Public" Enabled="true" Target="Microsoft.Demo.CostCenter" RequireOutput="false">
+        <Assembly>Console!SdkDataAccessAssembly</Assembly>
+        <Handler>Microsoft.EnterpriseManagement.UI.SdkDataAccess.ConsoleTaskHandler</Handler>
+        <Parameters>
+          <Argument Name="Assembly">Microsoft.Demo.ServiceRequest</Argument>
+          <Argument Name="Type">Microsoft.Demo.ServiceRequest.CostCenterTaskHandler</Argument>
+          <Argument>Edit</Argument>
+        </Parameters>
+      </ConsoleTask>
+      <ConsoleTask ID="DeleteCostCenterTask" Accessibility="Public" Enabled="true" Target="Microsoft.Demo.CostCenter" RequireOutput="false">
+        <Assembly>Console!SdkDataAccessAssembly</Assembly>
+        <Handler>Microsoft.EnterpriseManagement.UI.SdkDataAccess.ConsoleTaskHandler</Handler>
+        <Parameters>
+          <Argument Name="Assembly">Microsoft.Demo.ServiceRequest</Argument>
+          <Argument Name="Type">Microsoft.Demo.ServiceRequest.CostCenterTaskHandler</Argument>
+          <Argument>Delete</Argument>
+        </Parameters>
+      </ConsoleTask>
+    </ConsoleTasks>
     <Views>
-      <View ID="View.AllServiceRequests" Accessibility="Public" Enabled="true" Target="Microsoft.Demo.WorkItem.ServiceRequest" TypeID="EnterpriseManagement!GridViewType" Visible="true">
+      <View ID="AllServiceRequestsView" Accessibility="Public" Enabled="true" Target="Microsoft.Demo.WorkItem.ServiceRequest" TypeID="Console!GridViewType" Visible="true">
         <Category>NotUsed</Category>
         <Data>
           <Adapters>
@@ -114,7 +412,7 @@
         </Data>
         <Presentation>
           <Columns>
-            <mux:ColumnCollection xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mux="http://schemas.microsoft.com/SystemCenter/Common/UI/Views/GridView" xmlns:s="clr-namespace:System;assembly=mscorlib">              
+            <mux:ColumnCollection xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mux="http://schemas.microsoft.com/SystemCenter/Common/UI/Views/GridView" xmlns:s="clr-namespace:System;assembly=mscorlib">
               <mux:Column Name="Id" DisplayMemberBinding="{Binding Path=Id}" Width="100" DisplayName="ID" Property="Id" DataType="s:String" />
               <mux:Column Name="Title" DisplayMemberBinding="{Binding Path=Title}" Width="100" DisplayName="Title" Property="Title" DataType="s:String" />
               <mux:Column Name="CreatedDate" DisplayMemberBinding="{Binding Path=CreatedDate}" Width="100" DisplayName="Created Date" Property="CreatedDate" DataType="s:DateTime" />
@@ -125,30 +423,70 @@
           <ViewStrings />
         </Presentation>
       </View>
+      <View ID="CostCentersView" Accessibility="Public" Enabled="true" Target="Microsoft.Demo.CostCenter" TypeID="Console!GridViewType" Visible="true">
+        <Category>NotUsed</Category>
+        <Data>
+          <Adapters>
+            <Adapter AdapterName="dataportal:EnterpriseManagementObjectAdapter">
+              <AdapterAssembly>Microsoft.EnterpriseManagement.UI.SdkDataAccess</AdapterAssembly>
+              <AdapterType>Microsoft.EnterpriseManagement.UI.SdkDataAccess.DataAdapters.EnterpriseManagementObjectAdapter</AdapterType>
+            </Adapter>
+            <Adapter AdapterName="viewframework://Adapters/AdvancedList">
+              <AdapterAssembly>Microsoft.EnterpriseManagement.UI.ViewFramework</AdapterAssembly>
+              <AdapterType>Microsoft.EnterpriseManagement.UI.ViewFramework.AdvancedListSupportAdapter</AdapterType>
+            </Adapter>
+          </Adapters>
+          <ItemsSource>
+            <AdvancedListSupportClass DataTypeName="" AdapterName="viewframework://Adapters/AdvancedList" FullUpdateAdapter="dataportal:EnterpriseManagementObjectAdapter" DataSource="mom:ManagementGroup" FullUpdateFrequency="1" Streaming="true" IsRecurring="true" RecurrenceFrequency="{x:Static s:Int32.MaxValue}" xmlns="clr-namespace:Microsoft.EnterpriseManagement.UI.ViewFramework;assembly=Microsoft.EnterpriseManagement.UI.ViewFramework" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib">
+              <AdvancedListSupportClass.Parameters>
+                <QueryParameter Parameter="ManagementPackClassId" Value="$MPElement[Name='Microsoft.Demo.CostCenter']$" />
+              </AdvancedListSupportClass.Parameters>
+            </AdvancedListSupportClass>
+          </ItemsSource>
+          <Criteria />
+        </Data>
+        <Presentation>
+          <Columns>
+            <mux:ColumnCollection xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:mux="http://schemas.microsoft.com/SystemCenter/Common/UI/Views/GridView" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:data="clr-namespace:Microsoft.EnterpriseManagement.UI.SdkDataAccess.Common;assembly=Microsoft.EnterpriseManagement.UI.SdkDataAccess">
+              <mux:Column Name="ChargebackRate" DisplayMemberBinding="{Binding Path=ChargebackRate}" Width="100" DisplayName="ChargebackRate.5231915d561547dab1acfb47428dd0db" Property="ChargebackRate" DataType="s:Decimal" />
+              <mux:Column Name="CostCenterID" DisplayMemberBinding="{Binding Path=CostCenterID}" Width="100" DisplayName="CostCenterID.5993744f3a5b40a684ffdf7043a9cdc3" Property="CostCenterID" DataType="s:Int32" />
+              <mux:Column Name="DisplayName" DisplayMemberBinding="{Binding Path=DisplayName}" Width="100" DisplayName="DisplayName.91a4ebe3c80b4877a92e7b186a9d0a47" Property="DisplayName" DataType="s:String" />
+            </mux:ColumnCollection>
+          </Columns>
+          <ViewStrings>
+            <ViewString ID="ChargebackRate.5231915d561547dab1acfb47428dd0db">$MPElement[Name="ChargebackRate.5231915d561547dab1acfb47428dd0db"]$</ViewString>
+            <ViewString ID="CostCenterID.5993744f3a5b40a684ffdf7043a9cdc3">$MPElement[Name="CostCenterID.5993744f3a5b40a684ffdf7043a9cdc3"]$</ViewString>
+            <ViewString ID="DisplayName.91a4ebe3c80b4877a92e7b186a9d0a47">$MPElement[Name="DisplayName.91a4ebe3c80b4877a92e7b186a9d0a47"]$</ViewString>
+          </ViewStrings>
+        </Presentation>
+      </View>
     </Views>
     <Folders>
-      <Folder ID="Folder.ServiceRequests" Accessibility="Public" ParentFolder="ServiceManager.WorkItem.Library!ServiceManager.Console.WorkItem.Root" />
+      <Folder ID="ServiceRequestsFolder" Accessibility="Public" ParentFolder="ServiceManager.WorkItem.Library!ServiceManager.Console.WorkItem.Root" />
     </Folders>
-
     <FolderItems>
-      <FolderItem ElementID="EnterpriseManagement!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Task.CreateGridView" ID="FolderItem.CreateGridViewTask" Folder="Folder.ServiceRequests" />
-      <FolderItem ElementID="View.AllServiceRequests" ID="FolderItem.AllServiceRequests" Folder="Folder.ServiceRequests" />
+      <FolderItem ElementID="Console!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Task.CreateGridView" ID="FolderItem.CreateGridViewTaskServiceRequestsFolder" Folder="ServiceRequestsFolder" />
+      <FolderItem ElementID="AllServiceRequestsView" ID="FolderItem.AllServiceRequests" Folder="ServiceRequestsFolder" />
+      <FolderItem ElementID="CostCentersView" ID="FolderItem.CostCenters" Folder="Admin!Microsoft.EnterpriseManagement.ServiceManager.UI.Administration.Folder.Root" />
     </FolderItems>
-
     <ImageReferences>
-      <ImageReference ElementID="Folder.ServiceRequests" ImageID="EnterpriseManagement!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Image.Folder" />
-      <ImageReference ElementID="View.AllServiceRequests" ImageID="EnterpriseManagement!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Image.CreateView" />
+      <ImageReference ElementID="ServiceRequestsFolder" ImageID="Console!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Image.Folder" />
+      <ImageReference ElementID="AllServiceRequestsView" ImageID="Console!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Image.CreateView" />
+      <ImageReference ElementID="CostCentersView" ImageID="Image!GenericBaseEntity16" />
+      <ImageReference ElementID="EditCostCenterTask" ImageID="Console!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Image.Properties"/>
+      <ImageReference ElementID="DeleteCostCenterTask" ImageID="Console!Microsoft.EnterpriseManagement.ServiceManager.UI.Console.Image.Remove"/>
     </ImageReferences>
-
     <StringResources>
-      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_AssignedTo"/>
-      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_AffectedUser"/>
-      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_AffectedCIs"/>
-      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_DisplayName"/>
-      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_Add"/>
-      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_Remove"/>
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_AssignedTo" />
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_AffectedUser" />
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_AffectedCIs" />
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_DisplayName" />
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_Add" />
+      <StringResource ID="Microsoft.Demo.ServiceRequest.Form.Label_Remove" />
+      <StringResource ID="ChargebackRate.5231915d561547dab1acfb47428dd0db" />
+      <StringResource ID="CostCenterID.5993744f3a5b40a684ffdf7043a9cdc3" />
+      <StringResource ID="DisplayName.91a4ebe3c80b4877a92e7b186a9d0a47" />
     </StringResources>
-
   </Presentation>
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="true">
@@ -164,6 +502,15 @@
         </DisplayString>
         <DisplayString ElementID="Microsoft.Demo.WorkItem.ServiceRequest" SubElementID="Classification">
           <Name>Service Request Classification</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.CostCenter">
+          <Name>Cost Center</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.CostCenter" SubElementID="CostCenterID">
+          <Name>Cost Center ID</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.CostCenter" SubElementID="ChargebackRate">
+          <Name>Chargeback Rate</Name>
         </DisplayString>
         <DisplayString ElementID="Microsoft.Demo.ServiceRequest.Form.Label_AssignedTo">
           <Name>Assigned to</Name>
@@ -192,11 +539,45 @@
         <DisplayString ElementID="ServiceRequestClassificationEnum.DisableUser">
           <Name>Disable User</Name>
         </DisplayString>
-        <DisplayString ElementID="Folder.ServiceRequests">
+        <DisplayString ElementID="ServiceRequestsFolder">
           <Name>Service Requests</Name>
         </DisplayString>
-        <DisplayString ElementID="View.AllServiceRequests">
+        <DisplayString ElementID="AllServiceRequestsView">
           <Name>All Service Requests</Name>
+        </DisplayString>
+        <DisplayString ElementID="ServiceRequestHasCostCenter">
+          <Name>ServiceRequestHasCostCenter</Name>
+        </DisplayString>
+        <DisplayString ElementID="ServiceRequestHasCostCenter" SubElementID="Source_5898501e_67de_48a3_aab3_d53b825e497f">
+          <Name>Source_5898501e_67de_48a3_aab3_d53b825e497f</Name>
+        </DisplayString>
+        <DisplayString ElementID="ServiceRequestHasCostCenter" SubElementID="Target_518ab7a7_b64b_4a36_986e_b447a422acbb">
+          <Name>Target_518ab7a7_b64b_4a36_986e_b447a422acbb</Name>
+        </DisplayString>
+        <DisplayString ElementID="CostCenterForm">
+          <Name>CostCenterForm</Name>
+          <Description>Specify your form description.</Description>
+        </DisplayString>
+        <DisplayString ElementID="EditCostCenterTask">
+          <Name>Properties</Name>
+        </DisplayString>
+        <DisplayString ElementID="DeleteCostCenterTask">
+          <Name>Delete</Name>
+        </DisplayString>
+        <DisplayString ElementID="CostCentersView">
+          <Name>Cost Centers</Name>
+        </DisplayString>
+        <DisplayString ElementID="ChargebackRate.5231915d561547dab1acfb47428dd0db">
+          <Name>Chargeback Rate</Name>
+          <Description />
+        </DisplayString>
+        <DisplayString ElementID="CostCenterID.5993744f3a5b40a684ffdf7043a9cdc3">
+          <Name>Cost Center ID</Name>
+          <Description />
+        </DisplayString>
+        <DisplayString ElementID="DisplayName.91a4ebe3c80b4877a92e7b186a9d0a47">
+          <Name>Display Name</Name>
+          <Description>Display name of the object.</Description>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
@@ -241,11 +622,38 @@
         <DisplayString ElementID="ServiceRequestClassificationEnum.DisableUser">
           <Name>Отключить пользователя</Name>
         </DisplayString>
-        <DisplayString ElementID="Folder.ServiceRequests">
+        <DisplayString ElementID="ServiceRequestsFolder">
           <Name>Запросы на обслуживание</Name>
         </DisplayString>
-        <DisplayString ElementID="View.AllServiceRequests">
+        <DisplayString ElementID="AllServiceRequestsView">
           <Name>Все запросы на обслуживание</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.CostCenter">
+          <Name>Центр затрат</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.CostCenter" SubElementID="CostCenterID">
+          <Name>Номер центра затрат</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Demo.CostCenter" SubElementID="ChargebackRate">
+          <Name>затрат</Name>
+        </DisplayString>
+        <DisplayString ElementID="EditCostCenterTask">
+          <Name>Свойства</Name>
+        </DisplayString>
+        <DisplayString ElementID="DeleteCostCenterTask">
+          <Name>Удалить</Name>
+        </DisplayString>
+        <DisplayString ElementID="CostCentersView">
+          <Name>Центры затрат</Name>
+        </DisplayString>
+        <DisplayString ElementID="ChargebackRate.5231915d561547dab1acfb47428dd0db">
+          <Name>затрат</Name>
+        </DisplayString>
+        <DisplayString ElementID="CostCenterID.5993744f3a5b40a684ffdf7043a9cdc3">
+          <Name>Номер центра затрат</Name>
+        </DisplayString>
+        <DisplayString ElementID="DisplayName.91a4ebe3c80b4877a92e7b186a9d0a47">
+          <Name>Название</Name>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>

@@ -46,7 +46,8 @@ using Microsoft.EnterpriseManagement.UI.WpfViews;       //Contains FormEvents
 //Requires Microsoft.EnterpriseManagement.FormsInfra
 using Microsoft.EnterpriseManagement.UI.FormsInfra;     //Contains PreviewFormCommandEventArgs
 
-
+//Requires Microsoft.EnterpriseManagement.ServiceManager.Application.Common
+using Microsoft.EnterpriseManagement.ServiceManager.Application.Common; //Contains ConsoleContextHelper
 
 
 namespace Microsoft.Demo.ServiceRequest
@@ -124,6 +125,11 @@ namespace Microsoft.Demo.ServiceRequest
             }
         }
 
+        internal static void OpenSelectedItem(ListViewItem listviewItem)
+        {
+
+        }
+
         private void OnPreviewSubmit(object sender, PreviewFormCommandEventArgs e)
         {
             /* NOTE: The use of the IDataItem interface here is not supported/documented.
@@ -136,6 +142,12 @@ namespace Microsoft.Demo.ServiceRequest
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.AddHandler(FormEvents.PreviewSubmitEvent, new EventHandler<PreviewFormCommandEventArgs>(this.OnPreviewSubmit));
+        }
+
+        private void lvAffectedCIs_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            IDataItem emoProjectionObject = (IDataItem)lvAffectedCIs.SelectedItem;
+            ConsoleContextHelper.Instance.PopoutForm(emoProjectionObject);
         }
        
     }
