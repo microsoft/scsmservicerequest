@@ -137,6 +137,10 @@ namespace Microsoft.Demo.ServiceRequest
             * This interface may change in the future and no migration path is guaranteed by Microsoft.
             */
             IDataItem itemServiceRequest = this.DataContext as IDataItem;
+
+            //Return here because all validation will be done in pure XAML. Displayname will be done with a ModifyPropertyAction like the Title of the FormWindow.
+            return;
+
             if (String.IsNullOrEmpty(this.txtTitle.Text.Trim()))
             {
                 e.Cancel = true;
@@ -146,6 +150,7 @@ namespace Microsoft.Demo.ServiceRequest
             {
                 itemServiceRequest["DisplayName"] = itemServiceRequest["Id"] + " - " + itemServiceRequest["Title"];
             }
+            
         }
         
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

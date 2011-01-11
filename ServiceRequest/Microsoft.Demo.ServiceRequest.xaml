@@ -24,6 +24,7 @@ Original Version: 1.0
     xmlns:smcontrols="clr-namespace:Microsoft.EnterpriseManagement.UI.WpfControls;assembly=Microsoft.EnterpriseManagement.UI.SmControls"
     xmlns:local="clr-namespace:Microsoft.Demo.ServiceRequest"   
     xmlns:scwpf="http://schemas.microsoft.com/SystemCenter/Common/UI/Wpf"
+    xmlns:wpftoolbox="clr-namespace:Microsoft.EnterpriseManagement.UI.WpfToolbox;assembly=Microsoft.EnterpriseManagement.UI.FormsInfra"
     xmlns:views="clr-namespace:Microsoft.EnterpriseManagement.UI.FormsInfra;assembly=Microsoft.EnterpriseManagement.UI.FormsInfra"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     Height="600" Width="600"
@@ -65,7 +66,23 @@ Original Version: 1.0
                         </MultiBinding>
                     </scwpf:ModifyPropertyAction.ValueBinding>
                 </scwpf:ModifyPropertyAction>
+
+                <scwpf:ModifyPropertyAction Binding="{Binding Path=DisplayName, Mode=TwoWay}">
+                    <scwpf:ModifyPropertyAction.ValueBinding>
+                        <MultiBinding Mode="OneWay">
+                            <MultiBinding.Converter>
+                                <scwpf:FormatterConverter>{0} - {1}</scwpf:FormatterConverter>
+                            </MultiBinding.Converter>
+                            <Binding Path="Id" Mode="OneWay" FallbackValue=""/>
+                            <Binding Path="Title" Mode="OneWay" FallbackValue=""/>
+                        </MultiBinding>
+                    </scwpf:ModifyPropertyAction.ValueBinding>
+                </scwpf:ModifyPropertyAction>
+
             </scwpf:Rule>
+
+ 
+
         </scwpf:RuleCollection>
     </scwpf:BusinessLogic.Rules>
         
@@ -92,7 +109,7 @@ Original Version: 1.0
                 </Binding>
             </Label.Content>
         </Label>
-        <TextBox    Grid.Row="0" Grid.Column="0" Margin="8,30,85,0" Height="28" VerticalAlignment="Top" Name="txtTitle" Grid.ColumnSpan="2" Text="{Binding Title}"/>
+        <TextBox wpftoolbox:Validation.ValueRequired="true" wpftoolbox:Validation.ValueRequiredErrorMessage="Title is a required field"    Grid.Row="0" Grid.Column="0" Margin="8,30,85,0" Height="28" VerticalAlignment="Top" Name="txtTitle" Grid.ColumnSpan="2" Text="{Binding Title}"/>
         
         <Label      Grid.Row="0" Grid.Column="0" Margin="0,8,8,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Right" Name="lblID" Grid.ColumnSpan="2" Width="72" Target="{Binding ElementName=txtID}">
             <Label.Content>
